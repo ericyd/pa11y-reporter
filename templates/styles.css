@@ -149,127 +149,26 @@ h2 img {
 /* The inner SVG is just a container to provide easy layout and visual weight.
 Setting the overflow prevents any accidental cutoff of overlapping stroke */
 .icon svg {
+    display: inline-block;
     overflow: visible;
     transform-origin: 0px 75px;
-    
-    /* for some reason running direction:reverse on expander doesn't work - need a custom animation definition */
-    /* @keyframes duration | timing-function | delay | 
-    iteration-count | direction | fill-mode | play-state | name */
-    -webkit-animation: collapser 0.05s linear 0 1 normal forwards;
-    -moz-animation: collapser 0.05s linear 0 1 normal forwards;
-    -ms-animation: collapser 0.05s linear 0 1 normal forwards;
-    -o-animation: collapser 0.05s linear 0 1 normal forwards;
-    animation: collapser 0.05s linear 0 1 normal forwards;
+    transition: all 0.5s;
 }
 
-.icon.no-animation svg {
-    animation: none;
-    -webkit-animation: none;
-}
-
-.icon.is-expanded svg {
+.icon.is-expanded * {
     fill: var(--dark);
     transform-origin: 0px 75px;
 
-    /* @keyframes duration | timing-function | delay | 
-    iteration-count | direction | fill-mode | play-state | name */
-    -webkit-animation: expander 0.05s linear 0 1 normal forwards;
-    -moz-animation: expander 0.05s linear 0 1 normal forwards;
-    -ms-animation: expander 0.05s linear 0 1 normal forwards;
-    -o-animation: expander 0.05s linear 0 1 normal forwards;
-    animation: expander 0.05s linear 0 1 normal forwards;
+    -ms-transform: rotate(45deg); /* IE 9 */
+    -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 
 .toggler:hover .icon,
 .icon:hover {
     fill: var(--dark);
 }
-
-
-@keyframes expander {
-    0% {
-        -ms-transform: rotate(0deg); /* IE 9 */
-        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
-        transform: rotate(0deg);
-    }
-
-    100% {
-        -ms-transform: rotate(45deg); /* IE 9 */
-        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
-        transform: rotate(45deg);
-    }
-}
-
-@keyframes collapser {
-    0% {
-        -ms-transform: rotate(45deg); /* IE 9 */
-        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
-        transform: rotate(45deg);
-    }
-    
-    100% {
-        -ms-transform: rotate(0deg); /* IE 9 */
-        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
-        transform: rotate(0deg);
-    }
-}
-
-@-webkit-keyframes expander {
-    0% {
-        -ms-transform: rotate(0deg); /* IE 9 */
-        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
-        transform: rotate(0deg);
-    }
-
-    100% {
-        -ms-transform: rotate(45deg); /* IE 9 */
-        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
-        transform: rotate(45deg);
-    }
-}
-
-@-webkit-keyframes collapser {
-    0% {
-        -ms-transform: rotate(45deg); /* IE 9 */
-        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
-        transform: rotate(45deg);
-    }
-    
-    100% {
-        -ms-transform: rotate(0deg); /* IE 9 */
-        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
-        transform: rotate(0deg);
-    }
-}
-
-@-ms-keyframes expander {
-    0% {
-        -ms-transform: rotate(0deg); /* IE 9 */
-        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
-        transform: rotate(0deg);
-    }
-
-    100% {
-        -ms-transform: rotate(45deg); /* IE 9 */
-        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
-        transform: rotate(45deg);
-    }
-}
-
-@-ms-keyframes collapser {
-    0% {
-        -ms-transform: rotate(45deg); /* IE 9 */
-        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
-        transform: rotate(45deg);
-    }
-    
-    100% {
-        -ms-transform: rotate(0deg); /* IE 9 */
-        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
-        transform: rotate(0deg);
-    }
-}
-
 
 
 
