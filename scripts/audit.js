@@ -7,75 +7,76 @@ Runs `pa11y-ci` auditor on all files in the public URLs of the config
 // dependencies
 const fs           = require('fs');
 const path         = require('path');
+const pa11yCi      = require('pa11y-ci');
+const cheerio      = require('cheerio');
+const fetch        = require('node-fetch');
 const renderAudit  = require('./render');
 const wcagMap      = require('./wcag-map');
-const pa11yCi      = require('pa11y-ci');
 const config       = require('../config');
 const pa11yOptions = {
-    allowedStandards: ['WCAG2AA'], //Defaults to Section508, WCAG2A, WCAG2AA, and WCAG2AAA.
-    ignore: [ // things to ignore, if desired
-        // 'notice',
-        // 'WCAG2AA.Principle3.Guideline3_1.3_1_1.H57.2'
-    ]
+  allowedStandards: ['WCAG2AA'], //Defaults to Section508, WCAG2A, WCAG2AA, and WCAG2AAA.
+  ignore: [
+    // things to ignore, if desired
+    // 'notice',
+    // 'WCAG2AA.Principle3.Guideline3_1.3_1_1.H57.2'
+  ]
 };
 
 const sortBy = prop => {
-    return (a, b) => {
-        if (a[prop] > b[prop]) {
-            return 1;
-        } else if (a[prop] < b[prop]) {
-            return -1;
-        } else {
-            return 0;
-        }
+  return (a, b) => {
+    if (a[prop] > b[prop]) {
+      return 1;
+    } else if (a[prop] < b[prop]) {
+      return -1;
+    } else {
+      return 0;
     }
-}
+  };
+};
 
 // sort array of objects based on code property
 const sortByCode = sortBy('code');
 
 // group results based on code (i.e. the WCAG principle that it relates to)
-const groupByPrinciple = (rawResults) => {
-    var group = {};
-    rawResults.forEach((instance) => {
-        if (group[instance.code]) {
-            group[instance.code].instances.push(
-                {
-                    type: instance.type,
-                    context: instance.context,
-                    selector: instance.selector,
-                    // code: instance.code,
-                    // message: instance.message,
-                }
-            );
-        } else {
-            group[instance.code] = {
-                code: instance.code,
-                title: instance.title,
-                message: instance.message,
-                instances: [
-                    {
-                        type: instance.type,
-                        context: instance.context,
-                        selector: instance.selector,
-                        // code: instance.code,
-                        // message: instance.message,
-                    }
-                ]
-            }
-        }
-    })
+const groupByPrinciple = rawResults => {
+  var group = {};
+  rawResults.forEach(instance => {
+    if (group[instance.code]) {
+      group[instance.code].instances.push({
+        type: instance.type,
+        context: instance.context,
+        selector: instance.selector
+        // code: instance.code,
+        // message: instance.message,
+      });
+    } else {
+      group[instance.code] = {
+        code: instance.code,
+        title: instance.title,
+        message: instance.message,
+        instances: [
+          {
+            type: instance.type,
+            context: instance.context,
+            selector: instance.selector
+            // code: instance.code,
+            // message: instance.message,
+          }
+        ]
+      };
+    }
+  });
 
-    // merge object into array of objects
-    return Object.values(group);
-}
+  // merge object into array of objects
+  return Object.values(group);
+};
 
 // group and sort results based on WCAG principle
 const resultFilter = (rawResults, type) => {
-    return groupByPrinciple(rawResults.filter(result => result.typeCode === type))
-        .sort(sortByCode);
-}
-
+  return groupByPrinciple(
+    rawResults.filter(result => result.typeCode === type)
+  ).sort(sortByCode);
+};
 
 // pa11yCi returns an object with the following shape
 // {
@@ -97,72 +98,101 @@ const resultFilter = (rawResults, type) => {
 //      }
 // }
 function processPa11yResults(testRunResults) {
-    // optionally write results to file
-    if (process.argv.includes("writeFile")) {
-        fs.writeFile('pa11y-results.tmp.json',
-            JSON.stringify(testRunResults),
-            err => (err && console.error(err))
-        );
-    }
+  // optionally write results to file
+  if (process.argv.includes('writeFile')) {
+    fs.writeFile(
+      'pa11y-results.tmp.json',
+      JSON.stringify(testRunResults),
+      err => err && console.error(err)
+    );
+  }
 
-    const fileResults = Object.keys(testRunResults.results).map((page, i, array) => {
-        resultIssues = testRunResults.results[page].map(issue => {
-            let title = issue.code.split('.');
-            title = {
-                "principle": wcagMap.principle[title[1]],
-                "guideline": wcagMap.guideline[title[2]],
-                "rule": wcagMap.rule[title[3]]
-            }
-            return Object.assign(issue, {title: title});
+  const fileResults = Object.keys(testRunResults.results).map(
+    (page, i, array) => {
+      resultIssues = testRunResults.results[page].map(issue => {
+        let title = issue.code.split('.');
+        title = {
+          principle: wcagMap.principle[title[1]],
+          guideline: wcagMap.guideline[title[2]],
+          rule: wcagMap.rule[title[3]]
+        };
+        return Object.assign(issue, { title: title });
+      });
+
+      // marshal the results array into categories
+      const errors = resultFilter(resultIssues, 1);
+      const warnings = resultFilter(resultIssues, 2);
+      const notices = resultFilter(resultIssues, 3);
+      categories = [
+        {
+          resultType: 'error',
+          title: 'Errors',
+          principles: errors
+        },
+        {
+          resultType: 'warning',
+          title: 'Warnings',
+          principles: warnings
+        },
+        {
+          resultType: 'notice',
+          title: 'Notices',
+          principles: notices
+        }
+      ];
+      return {
+        name: page,
+        categories: categories
+      };
+    }
+  );
+
+  // render the results into a static html doc
+  renderAudit({
+    numberOfPages: testRunResults.total,
+    numberOfPagesPassed: testRunResults.passes || 0,
+    errors: testRunResults.errors,
+    files: fileResults
+  });
+}
+
+function getURLs() {
+  const sitemapUrl = config.sitemap;
+  if (!sitemapUrl) {
+    return Promise.resolve(
+      config.public.paths.map(p => config.public.baseURL + p)
+    );
+  }
+
+  return fetch(sitemapUrl)
+    .then(response => response.text())
+    .then(body => {
+      const $ = cheerio.load(body, {
+        xmlMode: true
+      });
+      let urls = [];
+
+      $('url > loc')
+        .toArray()
+        .forEach(element => {
+          let url = $(element).text();
+          urls.push(url);
         });
 
-        // marshal the results array into categories
-        const errors = resultFilter(resultIssues, 1);
-        const warnings = resultFilter(resultIssues, 2);
-        const notices = resultFilter(resultIssues, 3);
-        categories = [
-            {
-                resultType: 'error',
-                title: 'Errors',
-                principles: errors
-            },
-            {
-                resultType: 'warning',
-                title: 'Warnings',
-                principles: warnings
-            },
-            {
-                resultType: 'notice',
-                title: 'Notices',
-                principles: notices
-            }
-        ];
-        return {
-            name: page,
-            categories: categories
-        }
+      return Promise.resolve(urls);
     })
-    
-    // render the results into a static html doc
-    renderAudit({
-        numberOfPages: testRunResults.total,
-        numberOfPagesPassed: testRunResults.passes || 0,
-        errors: testRunResults.errors,
-        files: fileResults
+    .catch(error => {
+      if (error.stack && error.stack.includes('node-fetch')) {
+        throw new Error(`The sitemap "${sitemapUrl}" could not be loaded`);
+      }
+      throw new Error(`The sitemap "${sitemapUrl}" could not be parsed`);
     });
-
-    // optionally write results to file
-    if (process.argv.includes("writeFile")) {
-        fs.writeFile('results.tmp.json',
-            JSON.stringify(fileResults),
-            err => (err && console.error(err))
-        );
-    }
 }
 
 (function accessibilityAudit() {
-    // execute pa11y audit on each file
-    pa11yCi(getURLs(), pa11yOptions)
-        .then(processPa11yResults)
-        .catch(console.error.bind(console));
-})()
+  // execute pa11y audit on each file
+  getURLs()
+    .then(urls => pa11yCi(urls, pa11yOptions))
+    .then(processPa11yResults)
+    .catch(console.error.bind(console));
+})();

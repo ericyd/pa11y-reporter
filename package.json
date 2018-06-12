@@ -6,7 +6,7 @@
   "directories": {},
   "scripts": {
     "test": "npm run wcag",
-    "wcag": "node ./scripts/accessibility-runner.js"
+    "wcag": "node ./scripts/audit.js"
   },
   "devDependencies": {},
   "dependencies": {
