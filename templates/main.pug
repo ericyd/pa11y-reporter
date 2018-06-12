@@ -1,0 +1,62 @@
+mixin file(file)
+	.filename.toggler(data-toggle-element=file.name)
+		h1
+			include arrow.svg
+			span #{file.name}
+		h4
+			each category in file.categories
+				span(class="category-pill " + category.resultType) #{category.principles.length} #{category.title}
+	div.collapsed(id=file.name)
+		each category in file.categories
+			+category(category, file.name)
+
+mixin category(category, filename)
+	- className = "category-header " + category.resultType;
+	- toggleID = filename + category.resultType;
+	h2.toggler(class=className data-toggle-element=toggleID)
+		include arrow.svg
+		span #{category.title} (#{category.principles.length})
+	div.collapsed(id=filename + category.resultType)
+		each principle, i in category.principles
+			+principle(principle, filename + principle.code + i)
+
+mixin principle(principle, id)
+	.principle.toggler(data-toggle-element=id)
+		h3
+			include arrow.svg
+			span #{principle.title.principle} &gt; #{principle.title.guideline} &gt; #{principle.title.rule} (#{principle.instances.length})
+		p #{principle.message}
+		//- p #{principle.code}
+	div.collapsed(id=id)
+		each instance, j in principle.instances
+			+result(instance, id + j)
+
+mixin result(result, id)
+	- className=".h3__description result " + result.type;
+	div(class=className)
+		p #{result.context}
+		p #{result.selector}
+		//- p #{result.message}
+
+
+doctype html
+html
+	head
+		title Accessibility audit results
+		style
+			include styles.css
+	body
+		header.banner
+			h1 Accessibility audit results
+			p Courtesy of 
+				a(href="https://github.com/pa11y/pa11y", target="_blank") pa11y
+		.summary
+			p Number of pages processed: #{numberOfPages}
+			p Number of pages passed: #{numberOfPagesPass}
+			p Number of errors: #{errors}
+			button#expand-all Expand All
+		each file in files
+			.file
+				+file(file)
+		script
+			include scripts.js

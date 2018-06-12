@@ -1,0 +1,33 @@
+{
+  "name": "pa11y-reporter",
+  "version": "1.0.0",
+  "description": "A reporter for pa11y-ci",
+  "main": "scripts/audit.js",
+  "directories": {},
+  "scripts": {
+    "test": "npm run wcag",
+    "wcag": "node ./scripts/accessibility-runner.js"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "node-fetch": "^2.1.2",
+    "pa11y-ci": "^2.1.1",
+    "pug": "^2.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericyd/pa11y-reporter.git"
+  },
+  "keywords": [
+    "accessibility",
+    "wcag",
+    "pa11y"
+  ],
+  "author": "Eric Dauenhauer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ericyd/pa11y-reporter/issues"
+  },
+  "homepage": "https://github.com/ericyd/pa11y-reporter#readme"
+}

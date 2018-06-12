@@ -1,0 +1,298 @@
+:root {
+    /* Colors */
+    --error-dark: rgba(239, 64, 64, 1);
+    --error-light: rgba(239, 64, 64, 0.2);
+    --warning-dark: rgba(249, 216, 97, 1);
+    --warning-light: rgba(249, 216, 97, 0.2);
+    --notice-dark: rgba(200, 150, 250, 1);
+    --notice-light: rgba(200, 150, 250, 0.2);
+    --neutral: rgba(239, 239, 239, 1);
+    --link: rgba(200, 150, 250, 1);
+    --link-visited: rgba(180, 130, 230, 1);
+    --dark: #222;
+
+    /* Indentation */
+    --indent-level-1: 1em;
+    --indent-level-2: 2em;
+    --indent-level-3: 3em;
+}
+
+a,
+a:link {
+    color: var(--link);
+}
+
+a:visited,
+a:hover,
+a:focus {
+    color: var(--link-visited);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+/* Banner at top: holds title */
+.banner {
+    text-align: center;
+    background-color: var(--dark);
+    height: 150px;
+    padding: 20px;
+    color: white;
+    margin-bottom: 1em;
+}
+
+/* Main container for each file result */
+.file {
+    width: 70%;
+    margin: 0 auto 1em auto;
+    padding: 1em;
+    box-shadow: 0 6px 8px 0 rgba(0, 0, 0, .2);
+}
+
+/* Small callouts with category and number of results in the category */
+.category-pill {
+    display: inline-block;
+    margin: 0 2em 0 0;
+    padding: 0 1em;
+}
+
+.category-header {
+    display: block;
+    padding-left: 0.5em;
+    padding-top: 0.5em;
+}
+
+/*
+h1: file name
+h2: top-level result categories; "Error", "Warnings", "Notices"
+h3: result details; "Non-text Content"
+h4: details of result
+*/
+h2,
+h3,
+.filename h1 {
+    padding-bottom: 0.5em;
+}
+
+
+h3 {
+    padding-top: 2em;
+    padding-bottom: 0;
+}
+
+.principle {
+    margin-left: var(--indent-level-2);
+    font-size: 1rem;
+}
+
+.result {
+    padding: 0.1em 1em;
+    margin: 3em var(--indent-level-3);
+}
+
+.summary {
+    width: 70%;
+    margin: 0 auto 1em auto;
+    padding: 1em;
+    font-size: 1.25em;
+}
+
+
+
+/* Show/Hide styles */
+.collapsed,
+.hide {
+    display: none;
+}
+
+.expanded {
+    display: block;
+}
+/* inline version of .expanded */
+.show {
+    display: inline-block;
+}
+
+h2 img {
+    margin-right: 1em;
+}
+
+/* class to identify elements that toggle */
+.toggler {
+    cursor: pointer;
+    /* padding: 0.4em; */
+    border-radius: 0.1em;
+    transition: all 0.5s;
+}
+.toggler:hover {
+    background-color: var(--neutral);
+    /* box-shadow: 0 4px 6px 0 rgba(0, 0, 0, .2); */
+}
+
+.icon {
+    float: left;
+    width: 1em;
+    height: 1em;
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+    position: relative;
+    top: 0.21em;
+    stroke: var(--dark);
+    fill: none;
+    transition: all 0.5s;
+}
+
+/* The inner SVG is just a container to provide easy layout and visual weight.
+Setting the overflow prevents any accidental cutoff of overlapping stroke */
+.icon svg {
+    overflow: visible;
+    transform-origin: 0px 75px;
+    
+    /* for some reason running direction:reverse on expander doesn't work - need a custom animation definition */
+    /* @keyframes duration | timing-function | delay | 
+    iteration-count | direction | fill-mode | play-state | name */
+    -webkit-animation: collapser 0.05s linear 0 1 normal forwards;
+    -moz-animation: collapser 0.05s linear 0 1 normal forwards;
+    -ms-animation: collapser 0.05s linear 0 1 normal forwards;
+    -o-animation: collapser 0.05s linear 0 1 normal forwards;
+    animation: collapser 0.05s linear 0 1 normal forwards;
+}
+
+.icon.no-animation svg {
+    animation: none;
+    -webkit-animation: none;
+}
+
+.icon.is-expanded svg {
+    fill: var(--dark);
+    transform-origin: 0px 75px;
+
+    /* @keyframes duration | timing-function | delay | 
+    iteration-count | direction | fill-mode | play-state | name */
+    -webkit-animation: expander 0.05s linear 0 1 normal forwards;
+    -moz-animation: expander 0.05s linear 0 1 normal forwards;
+    -ms-animation: expander 0.05s linear 0 1 normal forwards;
+    -o-animation: expander 0.05s linear 0 1 normal forwards;
+    animation: expander 0.05s linear 0 1 normal forwards;
+}
+
+.toggler:hover .icon,
+.icon:hover {
+    fill: var(--dark);
+}
+
+
+@keyframes expander {
+    0% {
+        -ms-transform: rotate(0deg); /* IE 9 */
+        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -ms-transform: rotate(45deg); /* IE 9 */
+        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+        transform: rotate(45deg);
+    }
+}
+
+@keyframes collapser {
+    0% {
+        -ms-transform: rotate(45deg); /* IE 9 */
+        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+        transform: rotate(45deg);
+    }
+    
+    100% {
+        -ms-transform: rotate(0deg); /* IE 9 */
+        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+        transform: rotate(0deg);
+    }
+}
+
+@-webkit-keyframes expander {
+    0% {
+        -ms-transform: rotate(0deg); /* IE 9 */
+        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -ms-transform: rotate(45deg); /* IE 9 */
+        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+        transform: rotate(45deg);
+    }
+}
+
+@-webkit-keyframes collapser {
+    0% {
+        -ms-transform: rotate(45deg); /* IE 9 */
+        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+        transform: rotate(45deg);
+    }
+    
+    100% {
+        -ms-transform: rotate(0deg); /* IE 9 */
+        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+        transform: rotate(0deg);
+    }
+}
+
+@-ms-keyframes expander {
+    0% {
+        -ms-transform: rotate(0deg); /* IE 9 */
+        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -ms-transform: rotate(45deg); /* IE 9 */
+        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+        transform: rotate(45deg);
+    }
+}
+
+@-ms-keyframes collapser {
+    0% {
+        -ms-transform: rotate(45deg); /* IE 9 */
+        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+        transform: rotate(45deg);
+    }
+    
+    100% {
+        -ms-transform: rotate(0deg); /* IE 9 */
+        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+        transform: rotate(0deg);
+    }
+}
+
+
+
+
+/* Colors */
+.error {
+    border-left: var(--error-dark) 10px solid;
+}
+h2.error:hover {
+    background-color: var(--error-light);
+}
+
+.warning {
+    border-left: var(--warning-dark) 10px solid;
+}
+h2.warning:hover {
+    background-color: var(--warning-light);
+}
+
+.notice {
+    border-left: var(--notice-dark) 10px solid;
+}
+h2.notice:hover {
+    background-color: var(--notice-light);
+}
+
+

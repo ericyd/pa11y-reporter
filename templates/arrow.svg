@@ -1,0 +1,13 @@
+<svg viewBox='0 0 100 100'
+        class='icon no-animation'>
+        <svg x='12.5'
+            y='12.5'
+            width='75'
+            height='75'
+            viewBox='0 0 100 100'
+            stroke-width='10'
+            stroke-linecap='round'
+            stroke-linejoin='round'>
+            <path d='M0 10 L40 50 L0 90 L0 10'/>
+        </svg>
+</svg>
