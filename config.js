@@ -1,12 +1,14 @@
 module.exports = {
+    // uncomment and add sitemap URL to automatically determine pages
+    // sitemap: '',
+
     // definitions for public pages
     public: {
-        baseURL: 'http://www.testsite.com/',
+        baseURL: 'http://www.github.com/',
 
         // path segments to define pages. Will be appended to baseURL
         paths: [
-            'path1',
-            'path2'
+            'ericyd/pa11y-reporter'
         ]
     },
 
@@ -34,7 +36,7 @@ module.exports = {
 
         // path segments to define pages. Will be appended to baseURL
         paths: [
-            'accessibility-boilerplate'
+            'pa11y-reporter'
         ],
 
         // true will skip testing for all auth pages
