@@ -2,6 +2,9 @@
 Test runner to perform accessibility audits on saved HTML files.
 
 Runs `pa11y-ci` auditor on all files in the public URLs of the config
+
+Most of the heavy lifting is handled by pa11y; the bulk of this script
+is just organizing the data to be used in the report.
 =========================================================== */
 
 // dependencies
@@ -14,12 +17,8 @@ const renderAudit  = require('./render');
 const wcagMap      = require('./wcag-map');
 const config       = require('../config');
 const pa11yOptions = {
-  allowedStandards: ['WCAG2AA'], //Defaults to Section508, WCAG2A, WCAG2AA, and WCAG2AAA.
-  ignore: [
-    // things to ignore, if desired
-    // 'notice',
-    // 'WCAG2AA.Principle3.Guideline3_1.3_1_1.H57.2'
-  ]
+  allowedStandards: config.standards, // Defaults to Section508, WCAG2A, WCAG2AA, and WCAG2AAA.
+  ignore: config.ignore
 };
 
 const sortBy = prop => {

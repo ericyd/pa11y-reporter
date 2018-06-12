@@ -1,14 +1,25 @@
 module.exports = {
+    // standards to test against
+    // eliminate any unwanted options
+    standards: ['Section508', 'WCAG2AA', 'WCAG2A', 'WCAG2AAA'],
+
+    // things to ignore, if desired
+    // 'notice',
+    // 'WCAG2AA.Principle3.Guideline3_1.3_1_1.H57.2'
+    ignore: [],
+
     // uncomment and add sitemap URL to automatically determine pages
     // sitemap: '',
 
     // definitions for public pages
     public: {
-        baseURL: 'http://www.github.com/',
+        baseURL: 'http://www.ericyd.com/',
 
         // path segments to define pages. Will be appended to baseURL
         paths: [
-            'ericyd/pa11y-reporter'
+            '',
+            'geology',
+            'experience'
         ]
     },
 
