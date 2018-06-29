@@ -133,41 +133,47 @@ h2 img {
 }
 
 .icon {
-    float: left;
-    width: 1em;
-    height: 1em;
-    padding: 0;
-    margin: 0;
-    vertical-align: middle;
-    position: relative;
-    top: 0.21em;
-    stroke: var(--dark);
-    fill: none;
-    transition: all 0.5s;
+  float             : left;
+  width             : 1em;
+  height            : 1em;
+  padding           : 0;
+  margin            : 0;
+  vertical-align    : middle;
+  position          : relative;
+  top               : 0.21em;
+  stroke            : var(--dark);
+  fill              : none;
+  -webkit-transition: all 0.3s;
+  -o-transition     : all 0.3s;
+  transition        : all 0.3s;
 }
-
+ 
 /* The inner SVG is just a container to provide easy layout and visual weight.
 Setting the overflow prevents any accidental cutoff of overlapping stroke */
+ 
 .icon svg {
-    display: inline-block;
-    overflow: visible;
-    transform-origin: 0px 75px;
-    transition: all 0.5s;
+  overflow: visible;
 }
-
-.icon.is-expanded * {
-    fill: var(--dark);
-    transform-origin: 0px 75px;
-
-    -ms-transform: rotate(45deg); /* IE 9 */
-    -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
-    -moz-transform: rotate(45deg);
-    transform: rotate(45deg);
+ 
+.icon-container {
+  transform-origin: 0em 1em;
+  transition      : all 0.3s;
 }
-
+.icon-container.is-expanded {
+  /* IE 9 */
+  -ms-transform    : rotate(45deg);
+  /* Chrome, Safari, Opera */
+  -webkit-transform: rotate(45deg);
+  transform        : rotate(45deg);
+}
+ 
+.icon.is-expanded svg {
+  fill: var(--dark);
+}
+ 
 .toggler:hover .icon,
 .icon:hover {
-    fill: var(--dark);
+  fill: var(--dark);
 }
 
 
