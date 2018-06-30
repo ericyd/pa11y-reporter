@@ -5,7 +5,7 @@ mixin file(file)
 			span #{file.name}
 		h4
 			each category in file.categories
-				span(class="category-pill " + category.resultType) #{category.principles.length} #{category.title}
+				span(class="category-pill " + category.resultType) #{category.principles.reduce((all, curr) => all + curr.instances.length, 0)} #{category.title}
 	div.collapsed(id=file.name)
 		each category in file.categories
 			+category(category, file.name)
