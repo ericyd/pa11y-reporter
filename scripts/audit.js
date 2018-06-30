@@ -17,7 +17,9 @@ const renderAudit  = require('./render');
 const wcagMap      = require('./wcag-map');
 const config       = require('../config');
 const pa11yOptions = {
-  allowedStandards: config.standards, // Defaults to Section508, WCAG2A, WCAG2AA, and WCAG2AAA.
+  allowedStandards: config.standards, //Defaults to Section508, WCAG2A, WCAG2AA, and WCAG2AAA.
+  includeNotices: true,
+  includeWarnings: true,
   ignore: config.ignore
 };
 
